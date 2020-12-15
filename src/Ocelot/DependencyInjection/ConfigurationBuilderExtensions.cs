@@ -4,7 +4,7 @@ namespace Ocelot.DependencyInjection
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Configuration.Memory;
-    using Newtonsoft.Json;
+    using System.Text.Json;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -62,7 +62,7 @@ namespace Ocelot.DependencyInjection
 
                 var lines = File.ReadAllText(file.FullName);
 
-                var config = JsonConvert.DeserializeObject<FileConfiguration>(lines);
+                var config = JsonSerializer.Deserialize<FileConfiguration>(lines);
 
                 if (file.Name.Equals(globalConfigFile, StringComparison.OrdinalIgnoreCase))
                 {
@@ -73,7 +73,7 @@ namespace Ocelot.DependencyInjection
                 fileConfiguration.Routes.AddRange(config.Routes);
             }
 
-            var json = JsonConvert.SerializeObject(fileConfiguration);
+            var json = JsonSerializer.Serialize(fileConfiguration);
 
             File.WriteAllText(primaryConfigFile, json);
 
